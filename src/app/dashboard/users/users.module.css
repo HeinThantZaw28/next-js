@@ -1,0 +1,6 @@
+.table {
+  @apply w-full;
+}
+.table td {
+  @apply p-[10px];
+}
