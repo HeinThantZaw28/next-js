@@ -4,8 +4,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Dropdown, Input, Textarea } from "@/components/utils";
 import Button from "@/components/utils/Button";
 import { isActive, isAdmin } from "@/constant";
-
-export interface InitialValues {
+import axios from "axios";
+export interface UserInitialValues {
   username: string;
   email: string;
   password: string;
@@ -25,12 +25,15 @@ const AddUser = () => {
     isActive: null,
     address: "",
   };
-  const { register, handleSubmit, watch, control } = useForm<InitialValues>({
-    defaultValues,
-  });
+  const { register, handleSubmit, watch, control } = useForm<UserInitialValues>(
+    {
+      defaultValues,
+    }
+  );
 
-  const onSubmit: SubmitHandler<InitialValues> = (data) => {
-    console.log("data", data);
+  const onSubmit: SubmitHandler<UserInitialValues> = async (data) => {
+    const res = await axios.post("/api/user", data);
+    console.log(res);
   };
 
   return (

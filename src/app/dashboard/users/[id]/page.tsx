@@ -2,10 +2,11 @@
 import Image from "next/image";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { InitialValues } from "../add/page";
+import { UserInitialValues } from "../add/page";
 import { Dropdown, Input, Textarea } from "@/components/utils";
 import { isActive } from "@/constant";
 import Button from "@/components/utils/Button";
+import axios from "axios";
 
 const SingleUserPage = () => {
   const defaultValues = {
@@ -17,11 +18,13 @@ const SingleUserPage = () => {
     isActive: null,
     address: "",
   };
-  const { register, handleSubmit, watch, control } = useForm<InitialValues>({
-    defaultValues,
-  });
+  const { register, handleSubmit, watch, control } = useForm<UserInitialValues>(
+    {
+      defaultValues,
+    }
+  );
 
-  const onSubmit: SubmitHandler<InitialValues> = (data) => {
+  const onSubmit: SubmitHandler<UserInitialValues> = async (data) => {
     console.log("data", data);
   };
 

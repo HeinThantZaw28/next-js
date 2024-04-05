@@ -4,8 +4,16 @@ import Image from "next/image";
 import { Pagination, Search } from "@/components/common";
 import Link from "next/link";
 import { MdCreate, MdDelete } from "react-icons/md";
+import { fetchProducts } from "../../../../service/fetchData/fetchProducts";
 
-const Products = () => {
+interface ProductPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+const Products = async ({ searchParams }: ProductPageProps) => {
+  const q = searchParams?.q || "";
+  const page = searchParams?.page || "1";
+  const { count, products } = await fetchProducts(q, page);
   return (
     <div className="bg-bgSoft p-4 rounded-lg">
       <div className="flex items-center justify-between">
@@ -62,7 +70,7 @@ const Products = () => {
             </tr>
           </tbody>
         </table>
-        <Pagination />
+        <Pagination count={count} />
       </div>
     </div>
   );

@@ -4,8 +4,17 @@ import { Pagination, Search } from "@/components/common";
 import Image from "next/image";
 import { MdCreate, MdDelete } from "react-icons/md";
 import Link from "next/link";
+import { fetchUsers } from "../../../../service/fetchData/fetchUsers";
 
-const Users = () => {
+interface UserPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+const Users = async ({ searchParams }: UserPageProps) => {
+  const q = searchParams?.q || "";
+  const page = searchParams?.page || "1";
+  const { users, count } = await fetchUsers(q, page);
+  // console.log(users);
   return (
     <div className="bg-bgSoft p-4 rounded-lg">
       <div className="flex items-center justify-between">
@@ -31,35 +40,37 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="">
-              <td>
-                <div className="flex gap-[10px] items-center">
-                  <Image
-                    width={40}
-                    height={40}
-                    src={"/profile.png"}
-                    alt="profile"
-                    className="object-cover rounded-full"
-                  />
-                  <span>Jogn Doe</span>
-                </div>
-              </td>
-              <td>hello@gmail.com</td>
-              <td>Oct 30 2023</td>
-              <td>client</td>
-              <td>passive</td>
-              <td className="flex gap-3 mt-2">
-                <button>
-                  <MdCreate color="green" />
-                </button>
-                <button>
-                  <MdDelete color="red" />
-                </button>
-              </td>
-            </tr>
+            {users?.map((user) => (
+              <tr className="" key={user?.id}>
+                <td>
+                  <div className="flex gap-[10px] items-center">
+                    <Image
+                      width={40}
+                      height={40}
+                      src={user?.img || "/profile.png"}
+                      alt="profile"
+                      className="object-cover rounded-full"
+                    />
+                    <span>{user?.username}</span>
+                  </div>
+                </td>
+                <td>{user?.email}</td>
+                <td>{user?.createdAt.toString().slice(4, 16)}</td>
+                <td>{user?.isAdmin ? "admin" : "client"}</td>
+                <td>{user?.isActive ? "active" : "passive"}</td>
+                <td className="flex gap-3 mt-2">
+                  <Link href={`/dashboard/users/${user.id}`}>
+                    <MdCreate color="green" />
+                  </Link>
+                  <button>
+                    <MdDelete color="red" />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-        <Pagination />
+        <Pagination count={count} />
       </div>
     </div>
   );
