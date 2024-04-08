@@ -9,9 +9,9 @@ export const fetchProducts = async (
   const itemPerPage = 3;
   try {
     await connectDB();
-    const count = (await Products.find({ username: { $regex: regex } })).length;
+    const count = (await Products.find({ title: { $regex: regex } })).length;
     const products = await Products.find({
-      username: { $regex: regex },
+      title: { $regex: regex },
     })
       .limit(itemPerPage)
       .skip(itemPerPage * (Number(page) - 1));

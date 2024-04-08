@@ -39,35 +39,34 @@ const Products = async ({ searchParams }: ProductPageProps) => {
             </tr>
           </thead>
           <tbody>
-            <tr className="">
-              <td>
-                <div className="flex gap-[10px] items-center">
-                  <Image
-                    width={40}
-                    height={40}
-                    src={"/profile.png"}
-                    alt="profile"
-                    className="object-cover rounded-full"
-                  />
-                  <span>iphone</span>
-                </div>
-              </td>
-              <td>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Delectus, inventore.
-              </td>
-              <td>$123</td>
-              <td>Oct 29 2023</td>
-              <td>34</td>
-              <td className="flex gap-3 mt-2">
-                <Link href={"/dashboard/products/1"}>
-                  <MdCreate color="green" />
-                </Link>
-                <button>
-                  <MdDelete color="red" />
-                </button>
-              </td>
-            </tr>
+            {products?.map((product) => (
+              <tr className="" key={product?.id}>
+                <td>
+                  <div className="flex gap-[10px] items-center">
+                    <Image
+                      width={40}
+                      height={40}
+                      src={product?.img || "/profile.png"}
+                      alt="profile"
+                      className="object-cover rounded-full"
+                    />
+                    <span>{product?.title}</span>
+                  </div>
+                </td>
+                <td>{product?.desc}</td>
+                <td>${product?.price}</td>
+                <td>{product?.createdAt?.toString().slice(4, 16)}</td>
+                <td>{product?.stock}</td>
+                <td className="flex gap-3 mt-2">
+                  <Link href={`/dashboard/products/${product?.id}`}>
+                    <MdCreate color="green" />
+                  </Link>
+                  <button>
+                    <MdDelete color="red" />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <Pagination count={count} />

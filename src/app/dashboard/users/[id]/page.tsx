@@ -1,14 +1,28 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { UserInitialValues } from "../add/page";
 import { Dropdown, Input, Textarea } from "@/components/utils";
 import { isActive } from "@/constant";
 import Button from "@/components/utils/Button";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
+import { useRouter } from "next/navigation";
 
-const SingleUserPage = () => {
+const SingleUserPage = ({ params }: { params: { id: string } }) => {
+  const { id } = params;
+  const router = useRouter();
+  const [userDetails, setUserDetails] = useState<any>();
+
+  useEffect(() => {
+    const fetchSingleUser = async () => {
+      const res = await axios.get(`/api/user/${id}`);
+      if (res?.data?.status === HttpStatusCode.Found)
+        setUserDetails(res?.data?.product);
+    };
+    fetchSingleUser();
+  }, [id]);
+
   const defaultValues = {
     username: "",
     email: "",
@@ -18,14 +32,33 @@ const SingleUserPage = () => {
     isActive: null,
     address: "",
   };
-  const { register, handleSubmit, watch, control } = useForm<UserInitialValues>(
-    {
+  const { register, handleSubmit, watch, control, reset } =
+    useForm<UserInitialValues>({
       defaultValues,
-    }
-  );
+    });
+
+  useEffect(() => {
+    reset({
+      username: userDetails?.username,
+      email: userDetails?.email,
+      password: userDetails?.password,
+      phone: userDetails?.phone,
+      isAdmin:
+        userDetails?.isAdmin === true
+          ? { id: 1, label: "Yes", value: "yes" }
+          : { id: 2, label: "No", value: "no" },
+      isActive:
+        userDetails?.isActive === true
+          ? { id: 1, label: "Yes", value: "yes" }
+          : { id: 2, label: "No", value: "no" },
+      address: userDetails?.address,
+    });
+  }, [userDetails]);
 
   const onSubmit: SubmitHandler<UserInitialValues> = async (data) => {
-    console.log("data", data);
+    const res = await axios.patch(`/api/user/${id}`, data);
+    console.log("data", res);
+    res?.status === HttpStatusCode?.Ok && router.replace("/dashboard/users");
   };
 
   return (
@@ -33,13 +66,13 @@ const SingleUserPage = () => {
       {/* img container  */}
       <div className="w-[20%] bg-bgSoft rounded-lg flex flex-col p-3 gap-2 h-fit">
         <Image
-          src={"/profile.png"}
+          src={userDetails?.img || "/profile.png"}
           alt="profile img"
           width={400}
           height={40}
           className="object-contain relative bg-slate-300 rounded-md"
         />
-        <p>hello</p>
+        <p>{userDetails?.username}</p>
       </div>
       {/* form container  */}
       <form
@@ -68,7 +101,7 @@ const SingleUserPage = () => {
             className={"outline-none bg-bgDark p-5 rounded-md"}
           />
         </div>
-        <div className="flex flex-col gap-3">
+        {/* <div className="flex flex-col gap-3">
           <label htmlFor="password">Password</label>
           <Input
             id="password"
@@ -78,7 +111,7 @@ const SingleUserPage = () => {
             placeholder={"type your password"}
             className={"outline-none bg-bgDark p-5 rounded-md"}
           />
-        </div>
+        </div> */}
         <div className="flex flex-col gap-3">
           <label htmlFor="phone">Phone</label>
           <Input

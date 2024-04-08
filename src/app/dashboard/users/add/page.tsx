@@ -5,6 +5,7 @@ import { Dropdown, Input, Textarea } from "@/components/utils";
 import Button from "@/components/utils/Button";
 import { isActive, isAdmin } from "@/constant";
 import axios from "axios";
+import { redirect } from "next/navigation";
 export interface UserInitialValues {
   username: string;
   email: string;
@@ -34,6 +35,7 @@ const AddUser = () => {
   const onSubmit: SubmitHandler<UserInitialValues> = async (data) => {
     const res = await axios.post("/api/user", data);
     console.log(res);
+    redirect("/dashboard/users");
   };
 
   return (

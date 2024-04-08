@@ -3,6 +3,8 @@ import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Dropdown, Input, Textarea } from "@/components/utils";
 import Button from "@/components/utils/Button";
+import axios from "axios";
+import { redirect, useRouter } from "next/navigation";
 
 export interface InitialValues {
   title: string;
@@ -15,6 +17,7 @@ export interface InitialValues {
 }
 
 const AddProduct = () => {
+  const router = useRouter();
   const items = [
     { id: 1, label: "Apple", value: "apple" },
     { id: 2, label: "Banana", value: "banana" },
@@ -34,8 +37,9 @@ const AddProduct = () => {
     defaultValues,
   });
 
-  const onSubmit: SubmitHandler<InitialValues> = (data) => {
-    console.log("data", data);
+  const onSubmit: SubmitHandler<InitialValues> = async (data) => {
+    await axios.post("/api/product", data);
+    router.replace("/dashboard/products");
   };
 
   return (
@@ -66,29 +70,29 @@ const AddProduct = () => {
           />
         </div>
         <Input
-          {...register("price")}
-          type="number"
+          rest={{ ...register("price") }}
+          type="text"
           name="price"
           className="w-[45%] outline-none bg-bgDark p-5 rounded-md"
           placeholder={"price"}
         />
         <Input
-          {...register("stock")}
-          type="number"
+          rest={{ ...register("stock") }}
+          type="text"
           name="stock"
           className="w-[45%] outline-none bg-bgDark p-5 rounded-md"
           placeholder={"stock"}
         />
         <Input
-          {...register("color")}
+          rest={{ ...register("color") }}
           type="text"
           name="color"
           className="w-[45%] outline-none bg-bgDark p-5 rounded-md"
           placeholder={"color"}
         />
         <Input
-          {...register("size")}
-          type="number"
+          rest={{ ...register("size") }}
+          type="text"
           name="size"
           className="w-[45%] outline-none bg-bgDark p-5 rounded-md"
           placeholder={"size"}

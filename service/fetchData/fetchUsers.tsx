@@ -1,4 +1,3 @@
-import { UserInitialValues } from "@/app/dashboard/users/add/page";
 import { connectDB } from "../lib/database";
 import { Users } from "../models/Users";
 
@@ -21,19 +20,3 @@ export const fetchUsers = async (
     throw new Error(err);
   }
 };
-
-// export const addUser = async (data: UserInitialValues) => {
-//   const { username, email, password, phone, address, isActive, isAdmin } = data;
-//   await connectDB();
-//   // const users = await Users.create({
-//   //   username,
-//   //   email,
-//   //   password,
-//   //   phone,
-//   //   address,
-//   //   isActive: isActive.value,
-//   //   isAdmin: isAdmin.value,
-//   // });
-
-//   console.log("data", username);
-// };
