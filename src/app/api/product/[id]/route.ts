@@ -34,7 +34,6 @@ export async function PATCH(
 ) {
   const data = await request.json();
   const { title, desc, price, stock, color, size, category } = data;
-  console.log("data", data);
   await connectDB();
   const existingProduct = await Products.findById(params.id);
   if (!existingProduct) {
@@ -58,7 +57,4 @@ export async function PATCH(
       message: `Updated successfully!`,
     });
   }
-  return NextResponse.json({
-    message: "hello",
-  });
 }

@@ -4,7 +4,10 @@ import Image from "next/image";
 import { Pagination, Search } from "@/components/common";
 import Link from "next/link";
 import { MdCreate, MdDelete } from "react-icons/md";
-import { fetchProducts } from "../../../../service/fetchData/fetchProducts";
+import {
+  deleteProduct,
+  fetchProducts,
+} from "../../../../service/fetchData/fetchProducts";
 
 interface ProductPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -61,9 +64,12 @@ const Products = async ({ searchParams }: ProductPageProps) => {
                   <Link href={`/dashboard/products/${product?.id}`}>
                     <MdCreate color="green" />
                   </Link>
-                  <button>
-                    <MdDelete color="red" />
-                  </button>
+                  <form action={deleteProduct}>
+                    <input type="hidden" name="id" value={product?.id} />
+                    <button>
+                      <MdDelete color="red" />
+                    </button>
+                  </form>
                 </td>
               </tr>
             ))}

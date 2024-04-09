@@ -4,7 +4,10 @@ import { Pagination, Search } from "@/components/common";
 import Image from "next/image";
 import { MdCreate, MdDelete } from "react-icons/md";
 import Link from "next/link";
-import { fetchUsers } from "../../../../service/fetchData/fetchUsers";
+import {
+  deleteUser,
+  fetchUsers,
+} from "../../../../service/fetchData/fetchUsers";
 
 interface UserPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -62,9 +65,12 @@ const Users = async ({ searchParams }: UserPageProps) => {
                   <Link href={`/dashboard/users/${user.id}`}>
                     <MdCreate color="green" />
                   </Link>
-                  <button>
-                    <MdDelete color="red" />
-                  </button>
+                  <form action={deleteUser}>
+                    <input type="hidden" name="id" value={user?.id} />
+                    <button>
+                      <MdDelete color="red" />
+                    </button>
+                  </form>
                 </td>
               </tr>
             ))}

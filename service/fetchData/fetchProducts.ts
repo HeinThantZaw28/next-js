@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { connectDB } from "../lib/database";
 import { Products } from "../models/Products";
 
@@ -19,4 +20,16 @@ export const fetchProducts = async (
   } catch (err: any) {
     throw new Error(err);
   }
+};
+
+export const deleteProduct = async (formData: any) => {
+  "use server";
+  const { id } = Object.fromEntries(formData);
+  try {
+    await connectDB();
+    await Products.findByIdAndDelete(id);
+  } catch (err) {
+    throw new Error("Failed to delete product!");
+  }
+  revalidatePath("/dashboard/products");
 };
