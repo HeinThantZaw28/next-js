@@ -1,13 +1,28 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Dropdown, Input, Textarea } from "@/components/utils";
 import { isActive } from "@/constant";
 import Button from "@/components/utils/Button";
 import { InitialValues } from "../add/page";
+import { useRouter } from "next/navigation";
+import axios, { HttpStatusCode } from "axios";
 
-const SingleUserPage = () => {
+const SingleUserPage = ({ params }: { params: { id: string } }) => {
+  const { id } = params;
+  const router = useRouter();
+  const [productDetails, setProductDetails] = useState<any>();
+
+  useEffect(() => {
+    const fetchSingleProduct = async () => {
+      const res = await axios.get(`/api/product/${id}`);
+      if (res?.data?.status === HttpStatusCode.Found)
+        setProductDetails(res?.data?.product);
+    };
+    fetchSingleProduct();
+  }, [id]);
+
   const items = [
     { id: 1, label: "Apple", value: "apple" },
     { id: 2, label: "Banana", value: "banana" },
@@ -16,19 +31,40 @@ const SingleUserPage = () => {
   ];
   const defaultValues = {
     title: "",
-    category: "",
+    category: null,
     price: "",
     stock: "",
     color: "",
     size: "",
     desc: "",
   };
-  const { register, handleSubmit, watch, control } = useForm<InitialValues>({
-    defaultValues,
-  });
+  const { register, handleSubmit, watch, control, reset } =
+    useForm<InitialValues>({
+      defaultValues,
+    });
 
-  const onSubmit: SubmitHandler<InitialValues> = (data) => {
-    console.log("data", data);
+  const findCategory = (category: string) => {
+    return items.find((item) => item.value === category);
+  };
+
+  console.log("productDetails", productDetails);
+
+  useEffect(() => {
+    reset({
+      title: productDetails?.title,
+      category: findCategory(productDetails?.category),
+      price: productDetails?.price,
+      stock: productDetails?.stock,
+      color: productDetails?.color,
+      size: productDetails?.size,
+      desc: productDetails?.desc,
+    });
+  }, [productDetails]);
+
+  const onSubmit: SubmitHandler<InitialValues> = async (data) => {
+    const res = await axios.patch(`/api/product/${id}`, data);
+    console.log("data", res);
+    res?.status === HttpStatusCode?.Ok && router.replace("/dashboard/products");
   };
 
   return (
@@ -42,7 +78,7 @@ const SingleUserPage = () => {
           height={40}
           className="object-contain relative bg-slate-300 rounded-md"
         />
-        <p>Iphone</p>
+        <p>{productDetails?.title}</p>
       </div>
       {/* form container  */}
       <form

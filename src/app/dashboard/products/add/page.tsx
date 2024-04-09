@@ -8,7 +8,7 @@ import { redirect, useRouter } from "next/navigation";
 
 export interface InitialValues {
   title: string;
-  category: string;
+  category: any;
   price: string;
   stock: string;
   color: string;

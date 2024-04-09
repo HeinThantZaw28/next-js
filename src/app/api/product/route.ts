@@ -5,10 +5,11 @@ import { Products } from "../../../../service/models/Products";
 export const POST = async (request: NextRequest) => {
   const { title, category, price, stock, color, size, desc } =
     await request.json();
+  console.log("category", category.value);
   await connectDB();
   await Products.create({
     title,
-    categoy: category.value,
+    category: category.value,
     price,
     stock,
     color,

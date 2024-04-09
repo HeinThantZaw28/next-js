@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "../../../../../service/lib/database";
 import { Users } from "../../../../../service/models/Users";
 import { HttpStatusCode } from "axios";
-import bcrypt from "bcrypt";
 
 export const GET = async (
   request: Request,

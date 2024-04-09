@@ -5,7 +5,7 @@ import { Dropdown, Input, Textarea } from "@/components/utils";
 import Button from "@/components/utils/Button";
 import { isActive, isAdmin } from "@/constant";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 export interface UserInitialValues {
   username: string;
   email: string;
@@ -17,6 +17,7 @@ export interface UserInitialValues {
 }
 
 const AddUser = () => {
+  const router = useRouter();
   const defaultValues = {
     username: "",
     email: "",
@@ -35,7 +36,7 @@ const AddUser = () => {
   const onSubmit: SubmitHandler<UserInitialValues> = async (data) => {
     const res = await axios.post("/api/user", data);
     console.log(res);
-    redirect("/dashboard/users");
+    router.push("/dashboard/users");
   };
 
   return (
