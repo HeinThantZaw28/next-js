@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { connectDB } from "../lib/database";
 import { Users } from "../models/Users";
+import { signIn, signOut } from "../../auth";
 
 export const fetchUsers = async (
   q: string | string[],
@@ -32,4 +33,22 @@ export const deleteUser = async (formData: any) => {
     throw new Error("Failed to delete product!");
   }
   revalidatePath("/dashboard/users");
+};
+
+export const authenticate = async (formData: any) => {
+  "use server";
+  const { username, password } = Object.fromEntries(formData);
+  try {
+    await signIn("credentials", { username, password });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const logOut = async () => {
+  try {
+    await signOut();
+  } catch (err) {
+    throw err;
+  }
 };

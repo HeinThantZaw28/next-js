@@ -1,14 +1,10 @@
-"use client";
 import React from "react";
 import { menuItems } from "@/constant";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import NavLinks from "./NavLinks";
+import { auth } from "../../../auth";
 
 const Sidebar = () => {
-  const pathName = usePathname();
-
-  const handleLogout = () => {};
   return (
     <div className="overflow-y-scroll h-screen">
       <div className=" flex flex-col gap-5">
@@ -34,22 +30,10 @@ const Sidebar = () => {
               <div className="flex flex-col gap-5 mt-5 mb-10">
                 {item.lists.map((list) => {
                   return list.path ? (
-                    <Link
-                      className={`${
-                        pathName === list.path && "bg-slate-700"
-                      } flex gap-3 hover:bg-slate-700 px-4 py-5 items-center rounded-lg`}
-                      key={list.id}
-                      href={list.path}
-                    >
-                      <span className="text-lg">{list.icon}</span>
-                      <span className="text-lg">{list.title}</span>
-                    </Link>
+                    <NavLinks key={list.id} list={list} />
                   ) : (
                     <button
-                      onClick={handleLogout}
-                      className={`${
-                        pathName === list.path && "bg-slate-700"
-                      } flex gap-3 hover:bg-slate-700 px-4 py-5 items-center rounded-lg`}
+                      className={` flex gap-3 hover:bg-slate-700 px-4 py-5 items-center rounded-lg`}
                       key={list.id}
                     >
                       <span className="text-lg">{list.icon}</span>
